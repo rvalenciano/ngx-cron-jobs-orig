@@ -113,13 +113,15 @@ How you initialize the object? In parent component:
 Clone this repository, then use an `npm link` in the root of this repo.
 Generate a new angular app, and there run `npm link angular2-cron-jobs`.
 
-Develop and for each change regenerate all files.
+Develop and for each change regenerate all files in the root of angular2-cron-jobs repo.
 
 To generate all `*.js`, `*.d.ts` and `*.metadata.json` files:
 
 ```bash
 $ npm run build
 ```
+
+After this, changes will be reflected automatically.
 
 To lint all `*.ts` files:
 
