@@ -41,23 +41,23 @@ export class PosixCronSelectionService {
     setCron(newValue: Frequency) {
         const cron = ['*', '*', '*', '*', '*'];
         if (newValue && newValue.base && newValue.base >= this.baseFrequency.hour) {
-            cron[0] = newValue.minuteValues.length > 0 ? newValue.minuteValues[0].toString() : '*';
+            cron[0] = newValue.minuteValues.length > 0 ? newValue.minuteValues.join(',') : '*';
         }
 
         if (newValue && newValue.base && newValue.base >= this.baseFrequency.day) {
-            cron[1] = newValue.hourValues.length > 0 ? newValue.hourValues[0].toString() : '*';
+            cron[1] = newValue.hourValues.length > 0 ? newValue.hourValues.join(',') : '*';
         }
 
         if (newValue && newValue.base && newValue.base === this.baseFrequency.week) {
-            cron[4] = newValue.dayValues[0].toString();
+            cron[4] = newValue.dayValues.join(',');
         }
 
         if (newValue && newValue.base && newValue.base >= this.baseFrequency.month) {
-            cron[2] = newValue.dayOfMonthValues.length > 0 ? newValue.dayOfMonthValues[0].toString() : '*';
+            cron[2] = newValue.dayOfMonthValues.length > 0 ? newValue.dayOfMonthValues.join(',') : '*';
         }
 
         if (newValue && newValue.base && newValue.base === this.baseFrequency.year) {
-            cron[3] = newValue.monthValues.length > 0 ? newValue.monthValues[0].toString() : '*';
+            cron[3] = newValue.monthValues.length > 0 ? newValue.monthValues.join(',') : '*';
         }
         return cron.join(' ');
     }
