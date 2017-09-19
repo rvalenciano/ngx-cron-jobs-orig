@@ -6,11 +6,11 @@ export interface CronComponent {
     cronJobSyntax: String;
     previousFrequency: Frequency;
     _selectedBase: Number;
-    _selectedDay: Number;
-    _selectedHour: Number;
-    _selectedDayOfMonth: Number;
-    _selectedMonth: Number;
-    _selectedMinutes: Number;
+    _selectedDay: number[];
+    _selectedHour: number[];
+    _selectedDayOfMonth: number[];
+    _selectedMonth: number[];
+    _selectedMinutes: number[];
     frequency: Frequency;
     baseFrequency: any;
     initialFrequencies: Object[];
