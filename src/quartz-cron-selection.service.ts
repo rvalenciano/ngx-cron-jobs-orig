@@ -15,24 +15,24 @@ export class QuartzCronSelectionService extends PosixCronSelectionService {
     setCron(newValue: Frequency) {
         const cron = ['0', '*', '*', '*', '*', '?'];
         if (newValue && newValue.base && newValue.base >= this.baseFrequency.hour) {
-            cron[1] = newValue.minuteValues.length > 0 ? newValue.minuteValues[0].toString() : '0';
+            cron[1] = newValue.minuteValues.length > 0 ? newValue.minuteValues.join(',') : '0';
         }
 
         if (newValue && newValue.base && newValue.base >= this.baseFrequency.day) {
-            cron[2] = newValue.hourValues.length > 0 ? newValue.hourValues[0].toString() : '*';
+            cron[2] = newValue.hourValues.length > 0 ? newValue.hourValues.join(',') : '*';
         }
 
         if (newValue && newValue.base && newValue.base === this.baseFrequency.week) {
             cron[3] = '?';
-            cron[5] = newValue.dayValues[0].toString();
+            cron[5] = newValue.dayValues.join(',');
         }
 
         if (newValue && newValue.base && newValue.base >= this.baseFrequency.month) {
-            cron[3] = newValue.dayOfMonthValues.length > 0 ? newValue.dayOfMonthValues[0].toString() : '?';
+            cron[3] = newValue.dayOfMonthValues.length > 0 ? newValue.dayOfMonthValues.join(',') : '?';
         }
 
         if (newValue && newValue.base && newValue.base === this.baseFrequency.year) {
-            cron[4] = newValue.monthValues.length > 0 ? newValue.monthValues[0].toString() : '*';
+            cron[4] = newValue.monthValues.length > 0 ? newValue.monthValues.join(',') : '*';
         }
         return cron.join(' ');
     }
@@ -58,7 +58,7 @@ export class QuartzCronSelectionService extends PosixCronSelectionService {
         if (cron[1] !== '*') {
             // preparing to handle multiple minutes
             if (allowMultiple) {
-                tempArray = cron[0].split(',');
+                tempArray = cron[1].split(',');
                 for (let i = 0; i < tempArray.length; i++) { tempArray[i] = +tempArray[i]; }
                 this.frequency.minuteValues = tempArray;
             } else {
@@ -68,7 +68,7 @@ export class QuartzCronSelectionService extends PosixCronSelectionService {
         if (cron[2] !== '*') {
             // preparing to handle multiple hours
             if (allowMultiple) {
-                tempArray = cron[1].split(',');
+                tempArray = cron[2].split(',');
                 for (let i = 0; i < tempArray.length; i++) { tempArray[i] = +tempArray[i]; }
                 this.frequency.hourValues = tempArray;
             } else {
@@ -78,7 +78,7 @@ export class QuartzCronSelectionService extends PosixCronSelectionService {
         if (cron[3] !== '*' && cron[3] !== '?') {
             // preparing to handle multiple days of the month
             if (allowMultiple) {
-                tempArray = cron[2].split(',');
+                tempArray = cron[3].split(',');
                 for (let i = 0; i < tempArray.length; i++) { tempArray[i] = +tempArray[i]; }
                 this.frequency.dayOfMonthValues = tempArray;
             } else {
@@ -88,7 +88,7 @@ export class QuartzCronSelectionService extends PosixCronSelectionService {
         if (cron[4] !== '*') {
             // preparing to handle multiple months
             if (allowMultiple) {
-                tempArray = cron[3].split(',');
+                tempArray = cron[4].split(',');
                 for (let i = 0; i < tempArray.length; i++) { tempArray[i] = +tempArray[i]; }
                 this.frequency.monthValues = tempArray;
             } else {
@@ -98,7 +98,7 @@ export class QuartzCronSelectionService extends PosixCronSelectionService {
         if (cron[5] !== '*' && cron[5] !== '?') {
             // preparing to handle multiple days of the week
             if (allowMultiple) {
-                tempArray = cron[4].split(',');
+                tempArray = cron[5].split(',');
                 for (let i = 0; i < tempArray.length; i++) { tempArray[i] = +tempArray[i]; }
                 this.frequency.dayValues = tempArray;
             } else {
