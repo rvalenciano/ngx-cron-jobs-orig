@@ -1,83 +1,27 @@
-[![Build Status](https://travis-ci.org/rvalenciano/ngx-cron-jobs.svg?branch=master)](https://travis-ci.org/rvalenciano/ngx-cron-jobs) [![Maintainability](https://api.codeclimate.com/v1/badges/dc6b973320992074a560/maintainability)](https://codeclimate.com/github/rvalenciano/ngx-cron-jobs/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/dc6b973320992074a560/test_coverage)](https://codeclimate.com/github/rvalenciano/ngx-cron-jobs/test_coverage)
+# Angular2CronJobs
 
-# ngx-cron-jobs
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.5.0.
 
-Angular > 2 version of angular-cron-jobs (http://angular-cron-jobs.github.io/angular-cron-jobs)
+## Development server
 
-## Installation
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-To install this library, run:
+## Code scaffolding
 
-```bash
-$ npm install ngx-cron-jobs --save
-```
+Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-```bash
-$ yarn add ngx-cron-jobs
-```
+## Build
 
-## Consuming your library
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
 
+## Running unit tests
 
-and then from your Angular `AppModule`:
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-```typescript
-import { CronJobsModule } from 'ngx-cron-jobs';
+## Running end-to-end tests
 
-@NgModule({
-  imports: [
-    ...,
-    CronJobsModule,
-    ...
-  ]
-})
-export class AppModule { }
-```
+Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 
-Once your library is imported, you can use its components, directives and pipes in your Angular application:
+## Further help
 
-```xml
-<!-- To insert to in your component minimal config with ngModel -->
-<cron-jobs [(ngModel)]="hero.frequency"></cron-jobs>
-
-<!-- To insert to in your component minimal config with reactive forms -->
-<cron-jobs [formControl]="freqControl"></cron-jobs>
-
-<!-- To insert to in your component minimal config with reactive forms -->
-<!-- additional parameters -->
-<cron-jobs [formControl]="freqControl" [config]="cronConfig"  [validate]="cronValidate"></cron-jobs>
-```
-
-## Configuration:
-
-The component takes an attribute of `config`
-
-### Options
-
-
-## Development
-
-
-## License
-
-MIT © [Daniel 'yp2' Derezinski](https://github.com/yp2)
-
-## Contributors
-
-From angular 1 project
-
-[@wowo](https://github.com/wowo)
-
-[@immertreu](https://github.com/immertreu)
-
-[@TSteele27](https://github.com/TSteele27)
-
-[@DmitryEfimenki](https://github.com/DmitryEfimenko)
-
-From angular2-cron-jobs project
-
-[@rvalenciano](https://github.com/rvalenciano)
-
-From ngx-cron-jobs project
-
-[Daniel 'yp2' Derezinski](https://github.com/yp2)
+To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
