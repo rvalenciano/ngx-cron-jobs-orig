@@ -1,0 +1,55 @@
+<pre>{{frequency | json }}</pre>
+<div class="cron-wrap">
+  <span>Every: </span>
+  <div class="cron-select-wrap">
+    <!--(change)="selectedBase = $event"-->
+    <select class="cron-select"
+            [(ngModel)]="selectedBase"
+    >
+            <option *ngFor="let item of initialFrequencies" [ngValue]="item.value">{{item.label}}</option>
+        </select>
+  </div>
+
+  <div class="select-options">
+
+    <span *ngIf="selectedBase == 4">on </span>
+    <div *ngIf="selectedBase == 4" class="cron-select-wrap">
+      <select [multiple]="cronJobConfig.multiple" class="cron-select day-value" [(ngModel)]="selectedDay">
+      <option *ngFor="let item of cronDayValues" [ngValue]="item.value">{{item.label}}</option>
+      </select>
+    </div>
+    <span *ngIf="selectedBase >= 5">on the </span>
+    <div *ngIf="selectedBase >= 5" class="cron-select-wrap">
+
+      <select [multiple]="cronJobConfig.multiple" class="cron-select day-of-month-value" [(ngModel)]="selectedDayOfMonth">
+        <option *ngFor="let item of cronNumeral" [ngValue]="item.value">{{item.label}}</option>
+      </select>
+    </div>
+
+
+    <span *ngIf="selectedBase == 6">of </span>
+    <div *ngIf="frequency.base == 6" class="cron-select-wrap">
+      <select [multiple]="cronJobConfig.multiple" class="cron-select month-value" [(ngModel)]="selectedMonth">
+        <option *ngFor="let item of cronMonthName" [ngValue]="item.value">{{item.label}}</option>
+      </select>
+    </div>
+
+    <span *ngIf="selectedBase >= 2">at </span>
+    <div *ngIf="selectedBase >= 3" class="cron-select-wrap">
+      <select [multiple]="cronJobConfig.multiple" class="cron-select hour-value" [(ngModel)]="selectedHour">
+
+        <option *ngFor="let item of hourValues" [ngValue]="item">{{item}}</option>
+      </select>
+    </div>
+
+    <span *ngIf="selectedBase >= 3"> : </span>
+    <div *ngIf="frequency.base >= 2" class="cron-select-wrap">
+
+      <select [multiple]="cronJobConfig.multiple" class="cron-select minute-value" [(ngModel)]="selectedMinutes">
+        <option *ngFor="let item of minuteValues" [ngValue]="item">{{item}}</option>
+        </select>
+    </div>
+    <span *ngIf="selectedBase == 2"> past the hour</span>
+
+  </div>
+</div>
