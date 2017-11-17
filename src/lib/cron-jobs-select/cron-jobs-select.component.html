@@ -1,0 +1,34 @@
+<pre>{{config | json}}</pre>
+
+<div class="form-inline" *ngIf="config.bootstrap" [formGroup]="cronJobsForm">
+  <label class="mr-sm-2" for="selectBase">Every: </label>
+  <select class="form-control" id="selectBase" formControlName="baseFrequency">
+    <option *ngFor="let item of baseFrequencyData" [value]="item.value">{{item.label}}</option>
+  </select>
+
+  <label class="" *ngIf="(baseFrequency$ | async) === 4">on</label>
+  <select multiple [multiple]="config.multiple" class="form-control" *ngIf="(baseFrequency$ | async) === 4" formControlName="daysOfWeek">
+    <option *ngFor="let item of daysOfWeekData" [value]="item.value">{{item.label}}</option>
+  </select>
+
+  <label class="" *ngIf="(baseFrequency$ | async) >= 5">on the</label>
+  <select multiple [multiple]="config.multiple" class="form-control" *ngIf="(baseFrequency$ | async) >= 5" formControlName="daysOfMonth">
+    <option *ngFor="let item of daysOfMonthData" [value]="item.value">{{item.label}}</option>
+  </select>
+
+  <label class="" *ngIf="(baseFrequency$ | async) === 6">of</label>
+  <select multiple [multiple]="config.multiple" class="form-control" *ngIf="(baseFrequency$ | async) === 6" formControlName="months">
+    <option *ngFor="let item of monthsData" [ngValue]="item.value">{{item.label}}</option>
+  </select>
+
+  <label class="" *ngIf="(baseFrequency$ | async) >= 2">at</label>
+  <select multiple [multiple]="config.multiple" class="form-control" *ngIf="(baseFrequency$ | async) >= 3" formControlName="hours">
+    <option *ngFor="let item of hoursData" [value]="item.value">{{item.label}}</option>
+  </select>
+
+  <label class="" *ngIf="(baseFrequency$ | async) >= 3 ">:</label>
+  <select multiple [multiple]="config.multiple" class="form-control" *ngIf="(baseFrequency$ | async) >=2" formControlName="minutes">
+    <option *ngFor="let item of minutesData" [value]="item.value">{{item.label}}</option>
+  </select>
+  <label class="" *ngIf="(baseFrequency$ | async) === 2">past the hour</label>
+</div>
