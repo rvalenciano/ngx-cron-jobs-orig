@@ -23,9 +23,6 @@ import { QuartzService } from '../services/quartz.service';
   templateUrl: './cron-jobs.component.html',
   styleUrls: ['./cron-jobs.component.css'],
   providers: [
-    PosixService,
-    QuartzService,
-    DataService,
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => CronJobsComponent),
@@ -36,7 +33,7 @@ import { QuartzService } from '../services/quartz.service';
 export class CronJobsComponent implements OnInit, OnChanges, OnDestroy, ControlValueAccessor {
   @Input() config: CronJobsConfig;
   @Input() validate: CronJobsValidationConfig;
-  @Input() isValid = true;
+  @Input() isValid: boolean;
   @Input() formControl: FormControl;
 
   public isDisabled = false;
@@ -68,9 +65,8 @@ export class CronJobsComponent implements OnInit, OnChanges, OnDestroy, ControlV
       minutes: ''
     });
 
-    this.config = this.dataService.getConfig();
-    this.validate = this.dataService.getValidate();
-    this.setService();
+    this.config = this.dataService.getConfig({});
+    this.validate = this.dataService.getValidate({});
   }
 
   ngOnInit() {
@@ -112,8 +108,14 @@ export class CronJobsComponent implements OnInit, OnChanges, OnDestroy, ControlV
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['config']) {
+    if (changes['config'] && changes['config'].currentValue) {
       this.config = this.dataService.getConfig(<CronJobsConfig>changes['config'].currentValue);
+      if (this.config.quartz) {
+        this.cronService = this.injector.get(QuartzService);
+      } else {
+        this.cronService = this.injector.get(PosixService);
+      }
+
       setTimeout(() => {
         if (!changes['config'].previousValue ||
           changes['config'].previousValue['quartz'] !== changes['config'].currentValue['quartz']) {
@@ -121,19 +123,11 @@ export class CronJobsComponent implements OnInit, OnChanges, OnDestroy, ControlV
           this.cronJobsForm.patchValue({daysOfWeek: this.daysOfWeekData[0].value});
         }
       });
-      this.setService();
     }
-
-    if (changes['validate']) {
-      this.validate = this.dataService.getValidate(<CronJobsValidationConfig>changes['validate'].currentValue);
-    }
-  }
-
-  setService() {
-    if (this.config.quartz) {
-      this.cronService = this.injector.get(QuartzService);
-    } else {
-      this.cronService = this.injector.get(PosixService);
+    if (changes['validate'] && changes['validate'].currentValue) {
+      setTimeout(() => {
+        this.validate = this.dataService.getValidate(<CronJobsValidationConfig>changes['validate'].currentValue);
+      });
     }
   }
 

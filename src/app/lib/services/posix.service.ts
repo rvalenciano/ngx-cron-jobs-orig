@@ -5,7 +5,7 @@ import { DataService } from './data.service';
 @Injectable()
 export class PosixService {
 
-  public baseFrequency: CronJobsBaseFrequency;
+  protected baseFrequency: CronJobsBaseFrequency;
   private frequencyData: Array<CronJobsSelectOption>;
 
   constructor(protected dataService: DataService) {
@@ -30,12 +30,8 @@ export class PosixService {
   }
 
   public fromCron(value: String): CronJobsFrequency {
-    const cron = value.trim().replace(/\s+/g, ' ').split(' ');
+    const cron = value.replace(/\s+/g, ' ').split(' ');
     const frequency = this.getDefaultFrequency();
-
-    if (cron.length !== 5) {
-      return frequency;
-    }
 
     if (cron[0] === '*' && cron[1] === '*' && cron[2] === '*' && cron[3] === '*' && cron[4] === '*') {
       frequency.baseFrequency = this.baseFrequency.minute; // every minute
@@ -76,7 +72,11 @@ export class PosixService {
   setCron(value: CronJobsFrequency) {
     const cron = ['*', '*', '*', '*', '*'];
 
-    if (value && value.baseFrequency ) {
+    if (value && !value.baseFrequency) {
+      return '';
+    }
+
+    if (value&& value.baseFrequency ) {
       if (value.baseFrequency >= this.baseFrequency.hour) {
         cron[0] = value.minutes.length > 0 ? value.minutes.join(',') : '*';
       }
@@ -96,8 +96,6 @@ export class PosixService {
       if (value.baseFrequency === this.baseFrequency.year) {
         cron[3] = value.months.length > 0 ? value.months.join(',') : '*';
       }
-    } else {
-      return '';
     }
 
 
