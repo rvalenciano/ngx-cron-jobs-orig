@@ -17,11 +17,6 @@ import { QuartzService } from './services/quartz.service';
   ],
   exports: [
     CronJobsComponent
-  ],
-  providers: [
-    PosixService,
-    QuartzService,
-    DataService,
   ]
 })
 export class CronJobsModule {
