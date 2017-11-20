@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { BaseFrequency, Frequency, SelectOption } from '../contracts/contracts';
+import { CronJobsBaseFrequency, CronJobsFrequency, CronJobsSelectOption } from '../contracts/contracts';
 import { DataService } from './data.service';
 
 @Injectable()
 export class PosixService {
 
-  protected baseFrequency: BaseFrequency;
-  private frequencyData: Array<SelectOption>;
+  protected baseFrequency: CronJobsBaseFrequency;
+  private frequencyData: Array<CronJobsSelectOption>;
 
   constructor(protected dataService: DataService) {
     this.frequencyData = this.dataService.baseFrequency;
@@ -15,10 +15,10 @@ export class PosixService {
     keys.forEach((key: string, idx: number) => {
       result[key] = this.frequencyData[idx].value;
     });
-    this.baseFrequency = <BaseFrequency>result;
+    this.baseFrequency = <CronJobsBaseFrequency>result;
   }
 
-  public getDefaultFrequency(): Frequency {
+  public getDefaultFrequency(): CronJobsFrequency {
     return {
       baseFrequency: this.frequencyData[0].value,
       minutes: [],
@@ -29,7 +29,7 @@ export class PosixService {
     };
   }
 
-  public fromCron(value: String): Frequency {
+  public fromCron(value: String): CronJobsFrequency {
     const cron = value.replace(/\s+/g, ' ').split(' ');
     const frequency = this.getDefaultFrequency();
 
@@ -69,7 +69,7 @@ export class PosixService {
     return frequency;
   }
 
-  setCron(value: Frequency) {
+  setCron(value: CronJobsFrequency) {
     const cron = ['*', '*', '*', '*', '*'];
 
     if (value && !value.baseFrequency) {

@@ -1,16 +1,20 @@
 import { Injectable } from '@angular/core';
-import { CronConfig, SelectOption } from '../contracts/contracts';
+import { CronJobsConfig, CronJobsSelectOption, CronJobsValidationConfig } from '../contracts/contracts';
 
 @Injectable()
 export class DataService {
 
-  private defaultConfig: CronConfig = {
+  private defaultConfig: CronJobsConfig = {
     quartz: false,
     bootstrap: true,
     multiple: false,
   };
 
-  private daysOfWeekPosix: Array<SelectOption> = [
+  private defaultValidateConfig: CronJobsValidationConfig = {
+    validate: false,
+  };
+
+  private daysOfWeekPosix: Array<CronJobsSelectOption> = [
     {value: 0, label: 'Sunday'},
     {value: 1, label: 'Monday'},
     {value: 2, label: 'Tuesday'},
@@ -20,7 +24,7 @@ export class DataService {
     {value: 6, label: 'Saturday'}
   ];
 
-  private daysOfWeekQuartz: Array<SelectOption> = [
+  private daysOfWeekQuartz: Array<CronJobsSelectOption> = [
     {value: 1, label: 'Sunday'},
     {value: 2, label: 'Monday'},
     {value: 3, label: 'Tuesday'},
@@ -30,7 +34,7 @@ export class DataService {
     {value: 7, label: 'Saturday'}
   ];
 
-  private numeral: Array<SelectOption> = [
+  private numeral: Array<CronJobsSelectOption> = [
     {value: 1, label: '1st'},
     {value: 2, label: '2nd'},
     {value: 3, label: '3rd'},
@@ -64,7 +68,7 @@ export class DataService {
     {value: 31, label: '31st'}
   ];
 
-  private _months: Array<SelectOption> = [
+  private _months: Array<CronJobsSelectOption> = [
     {value: 1, label: 'January'},
     {value: 2, label: 'February'},
     {value: 3, label: 'March'},
@@ -79,7 +83,7 @@ export class DataService {
     {value: 12, label: 'December'}
   ];
 
-  private _baseFrequency: Array<SelectOption> = [
+  private _baseFrequency: Array<CronJobsSelectOption> = [
     {value: 0, label: 'Please select'},
     {value: 1, label: 'Minute'},
     {value: 2, label: 'Hour'},
@@ -89,35 +93,35 @@ export class DataService {
     {value: 6, label: 'Year'}
   ];
 
-  private _hours: Array<SelectOption>;
-  private _minutes: Array<SelectOption>;
+  private _hours: Array<CronJobsSelectOption>;
+  private _minutes: Array<CronJobsSelectOption>;
 
 
-  public get baseFrequency(): Array<SelectOption> {
+  public get baseFrequency(): Array<CronJobsSelectOption> {
     return [
       ...this._baseFrequency
     ];
   }
 
-  public get daysOfMonth(): Array<SelectOption> {
+  public get daysOfMonth(): Array<CronJobsSelectOption> {
     return [
       ...this.numeral
     ];
   }
 
-  public get months(): Array<SelectOption> {
+  public get months(): Array<CronJobsSelectOption> {
     return [
       ...this._months
     ];
   }
 
-  public get hours(): Array<SelectOption> {
+  public get hours(): Array<CronJobsSelectOption> {
     return [
       ...this._hours
     ];
   }
 
-  public get minutes(): Array<SelectOption> {
+  public get minutes(): Array<CronJobsSelectOption> {
     return [
       ...this._minutes
     ];
@@ -126,25 +130,32 @@ export class DataService {
   constructor() {
     this._hours = [];
     for (let x = 0; x < 24; x++) {
-      this._hours.push(<SelectOption>{value: x, label: `${x}`});
+      this._hours.push(<CronJobsSelectOption>{value: x, label: `${x}`});
     }
 
     this._minutes = [];
     for (let x = 0; x < 60; x = x + 5) {
-      this._minutes.push(<SelectOption>{value: x, label: `${x}`});
+      this._minutes.push(<CronJobsSelectOption>{value: x, label: `${x}`});
     }
 
   }
 
 
-  getConfig(config: CronConfig): CronConfig {
+  getConfig(config: CronJobsConfig): CronJobsConfig {
     return {
       ...this.defaultConfig,
       ...config
     };
   }
 
-  getDaysOfWeek(quartz: Boolean): Array<SelectOption> {
+  getValidate(validateConfig: CronJobsValidationConfig): CronJobsValidationConfig {
+    return {
+      ...this.defaultValidateConfig,
+      ...validateConfig
+    };
+  }
+
+  getDaysOfWeek(quartz: Boolean): Array<CronJobsSelectOption> {
     if (quartz) {
       return [
         ...this.daysOfWeekQuartz

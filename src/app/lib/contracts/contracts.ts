@@ -1,4 +1,4 @@
-export interface BaseFrequency {
+export interface CronJobsBaseFrequency {
   none: number;
   minute: number;
   hour: number;
@@ -8,7 +8,7 @@ export interface BaseFrequency {
   year: number;
 }
 
-export interface CronConfig {
+export interface CronJobsConfig {
   quartz?: boolean;
   multiple?: boolean;
   bootstrap?: boolean;
@@ -23,7 +23,7 @@ export interface FrequencyOld {
   dayValues: Array<number>;
 }
 
-export interface Frequency {
+export interface CronJobsFrequency {
   baseFrequency: number;
   minutes: Array<number>;
   hours: Array<number>;
@@ -32,7 +32,11 @@ export interface Frequency {
   months: Array<number>;
 }
 
-export interface SelectOption {
+export interface CronJobsSelectOption {
   value: number;
   label: string | number;
+}
+
+export interface CronJobsValidationConfig {
+  validate?: boolean;
 }

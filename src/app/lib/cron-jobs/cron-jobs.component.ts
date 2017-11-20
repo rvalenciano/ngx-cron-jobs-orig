@@ -1,5 +1,11 @@
-import { Component, forwardRef, Injector, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import { CronConfig, Frequency, SelectOption } from '../contracts/contracts';
+import {
+  Component, forwardRef, Injector, Input, OnChanges, OnDestroy, OnInit,
+  SimpleChanges
+} from '@angular/core';
+import {
+  CronJobsConfig, CronJobsFrequency, CronJobsSelectOption,
+  CronJobsValidationConfig
+} from '../contracts/contracts';
 import { DataService } from '../services/data.service';
 import { ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Subject } from 'rxjs/Subject';
@@ -13,28 +19,31 @@ import { PosixService } from '../services/posix.service';
 import { QuartzService } from '../services/quartz.service';
 
 @Component({
-  selector: 'cron-jobs-select',
-  templateUrl: './cron-jobs-select.component.html',
-  styleUrls: ['./cron-jobs-select.component.css'],
+  selector: 'cron-jobs',
+  templateUrl: './cron-jobs.component.html',
+  styleUrls: ['./cron-jobs.component.css'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => CronJobsSelectComponent),
+      useExisting: forwardRef(() => CronJobsComponent),
       multi: true
     }
   ]
 })
-export class CronJobsSelectComponent implements OnInit, OnChanges, OnDestroy, ControlValueAccessor {
-  @Input() config: CronConfig;
+export class CronJobsComponent implements OnInit, OnChanges, OnDestroy, ControlValueAccessor {
+  @Input() config: CronJobsConfig;
+  @Input() validate: CronJobsValidationConfig;
+  @Input() isValid: boolean;
+  @Input() formControl: FormControl;
 
   public isDisabled = false;
-  public baseFrequencyData: Array<SelectOption>;
+  public baseFrequencyData: Array<CronJobsSelectOption>;
   public baseFrequency$: Observable<number>;
-  public daysOfWeekData: Array<SelectOption> = [];
-  public daysOfMonthData: Array<SelectOption> = [];
-  public monthsData: Array<SelectOption> = [];
-  public hoursData: Array<SelectOption> = [];
-  public minutesData: Array<SelectOption> = [];
+  public daysOfWeekData: Array<CronJobsSelectOption> = [];
+  public daysOfMonthData: Array<CronJobsSelectOption> = [];
+  public monthsData: Array<CronJobsSelectOption> = [];
+  public hoursData: Array<CronJobsSelectOption> = [];
+  public minutesData: Array<CronJobsSelectOption> = [];
   public onChange: (cronValue: string) => {};
 
   private isPatching = false;
@@ -55,6 +64,9 @@ export class CronJobsSelectComponent implements OnInit, OnChanges, OnDestroy, Co
       hours: '',
       minutes: ''
     });
+
+    this.config = this.dataService.getConfig({});
+    this.validate = this.dataService.getValidate({});
   }
 
   ngOnInit() {
@@ -65,14 +77,15 @@ export class CronJobsSelectComponent implements OnInit, OnChanges, OnDestroy, Co
       .publishReplay(1)
       .refCount();
 
-    this.cronJobsForm.valueChanges
+    this.cronJobsForm
+      .valueChanges
       .takeUntil(this.unSubscribe)
       .filter(() => !this.isPatching)
-      .map((freq: Frequency) => {
+      .map((freq: CronJobsFrequency) => {
         freq.baseFrequency = +freq.baseFrequency;
         return freq;
       })
-      .subscribe((values: Frequency) => {
+      .subscribe((values: CronJobsFrequency) => {
         if (!values.baseFrequency) {
           values = this.getDefaultFrequency();
           this.cronJobsForm.patchValue(values, {emitEvent: false});
@@ -82,6 +95,7 @@ export class CronJobsSelectComponent implements OnInit, OnChanges, OnDestroy, Co
 
     this.baseFrequencyData = this.dataService.baseFrequency;
     this.daysOfMonthData = this.dataService.daysOfMonth;
+    this.daysOfWeekData = this.dataService.getDaysOfWeek(false);
     this.monthsData = this.dataService.months;
     this.hoursData = this.dataService.hours;
     this.minutesData = this.dataService.minutes;
@@ -95,24 +109,31 @@ export class CronJobsSelectComponent implements OnInit, OnChanges, OnDestroy, Co
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['config'] && changes['config'].currentValue) {
-      this.config = this.dataService.getConfig(<CronConfig>changes['config'].currentValue);
+      this.config = this.dataService.getConfig(<CronJobsConfig>changes['config'].currentValue);
       if (this.config.quartz) {
         this.cronService = this.injector.get(QuartzService);
       } else {
         this.cronService = this.injector.get(PosixService);
       }
 
-      if (!changes['config'].previousValue ||
-        changes['config'].previousValue['quartz'] !== changes['config'].currentValue['quartz']) {
-        this.daysOfWeekData = this.dataService.getDaysOfWeek(this.config.quartz);
-        this.cronJobsForm.patchValue({daysOfWeek: this.daysOfWeekData[0].value});
-      }
+      setTimeout(() => {
+        if (!changes['config'].previousValue ||
+          changes['config'].previousValue['quartz'] !== changes['config'].currentValue['quartz']) {
+          this.daysOfWeekData = this.dataService.getDaysOfWeek(this.config.quartz);
+          this.cronJobsForm.patchValue({daysOfWeek: this.daysOfWeekData[0].value});
+        }
+      });
+    }
+    if (changes['validate'] && changes['validate'].currentValue) {
+      setTimeout(() => {
+        this.validate = this.dataService.getValidate(<CronJobsValidationConfig>changes['validate'].currentValue);
+      });
     }
   }
 
   writeValue(cronValue: string): void {
     this.isPatching = true;
-    let valueToPatch: Frequency;
+    let valueToPatch: CronJobsFrequency;
     if (cronValue) {
       valueToPatch = this.cronService.fromCron(cronValue);
     } else {
@@ -141,7 +162,7 @@ export class CronJobsSelectComponent implements OnInit, OnChanges, OnDestroy, Co
     }
   }
 
-  getDefaultFrequency(): Frequency {
+  getDefaultFrequency(): CronJobsFrequency {
     const freq = this.cronService.getDefaultFrequency();
     freq.daysOfWeek = this.daysOfWeekData[0] ? [this.daysOfWeekData[0].value] : [];
     freq.daysOfMonth = this.daysOfMonthData[0] ? [this.daysOfMonthData[0].value] : [];
@@ -150,6 +171,18 @@ export class CronJobsSelectComponent implements OnInit, OnChanges, OnDestroy, Co
     freq.minutes = this.minutesData[0] ? [this.minutesData[0].value] : [];
 
     return freq;
+  }
+
+  getIsValid(): boolean {
+    return this.validate.validate ? this.getValid() : false;
+  }
+
+  getIsInvalid(): boolean {
+    return this.validate.validate ? !this.getValid() : false;
+  }
+
+  getValid(): boolean {
+    return this.formControl ? this.formControl.valid : this.isValid;
   }
 
   ngOnDestroy() {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { PosixService } from './posix.service';
 import { DataService } from './data.service';
-import { Frequency } from '../contracts/contracts';
+import { CronJobsFrequency } from '../contracts/contracts';
 
 @Injectable()
 export class QuartzService extends PosixService {
@@ -10,7 +10,7 @@ export class QuartzService extends PosixService {
     super(dataService);
   }
 
-  public fromCron(value: String): Frequency {
+  public fromCron(value: String): CronJobsFrequency {
     const cron = value.replace(/\s+/g, ' ').split(' ');
     const frequency = this.getDefaultFrequency();
 
@@ -50,7 +50,7 @@ export class QuartzService extends PosixService {
     return frequency;
   }
 
-  setCron(newValue: Frequency) {
+  setCron(newValue: CronJobsFrequency) {
     const cron = ['0', '*', '*', '*', '*', '?'];
 
     if (newValue && !newValue.baseFrequency) {
