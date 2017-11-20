@@ -26,11 +26,11 @@ export class CronSelectionComponent implements OnInit, ControlValueAccessor, Cro
     cronJobSyntax: String;
     previousFrequency: Frequency;
     _selectedBase: Number;
-    _selectedDay: Number;
-    _selectedHour: Number;
-    _selectedDayOfMonth: Number;
-    _selectedMonth: Number;
-    _selectedMinutes: Number;
+    _selectedDay: number[];
+    _selectedHour: number[];
+    _selectedDayOfMonth: number[];
+    _selectedMonth: number[];
+    _selectedMinutes: number[];
     frequency: Frequency;
     baseFrequency: any;
     initialFrequencies: Object[];
@@ -48,11 +48,11 @@ export class CronSelectionComponent implements OnInit, ControlValueAccessor, Cro
     constructor(private injector: Injector) {
         this.cronJobSyntax = '';
         this._selectedBase = 1;
-        this._selectedDay = 0;
-        this._selectedHour = 1;
-        this._selectedDayOfMonth = 0;
-        this._selectedMonth = 1;
-        this._selectedMinutes = 0;
+        this._selectedDay = [0];
+        this._selectedHour = [1];
+        this._selectedDayOfMonth = [0];
+        this._selectedMonth = [1];
+        this._selectedMinutes = [0];
         this.modelChanged = false;
         this.minuteValues = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
         this.hourValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
@@ -165,7 +165,7 @@ export class CronSelectionComponent implements OnInit, ControlValueAccessor, Cro
     public ngModelValueChanged(newValue) {
         if (newValue != null && newValue) {
             this.modelChanged = true;
-            this.frequency = this.cronService.fromCron(newValue, false);
+            this.frequency = this.cronService.fromCron(newValue, this.cronJobConfig.multiple);
         } else if (newValue === '') {
             this.frequency = undefined;
         }
@@ -188,12 +188,19 @@ export class CronSelectionComponent implements OnInit, ControlValueAccessor, Cro
     }
 
     set selectedHour(value: any) {
-        if (value !== this._selectedHour) {
+        if (!Array.isArray(value)) {
+            value = [+value];
+        } else {
+            value = value.map(v => +v)
+        }
+
+        if (!this.arrayEquals(value, this._selectedHour)) {
             this.frequency.hourValues = [];
-            this.frequency.hourValues.push(+value);
-            this._selectedHour = +value;
+            this._selectedHour = value;
+            this.frequency.hourValues = this.frequency.hourValues.concat(value);
             this._onChangeCallback(this.setCronJobSyntax());
         }
+
         this._onTouchedCallback();
     }
 
@@ -202,10 +209,16 @@ export class CronSelectionComponent implements OnInit, ControlValueAccessor, Cro
     }
 
     set selectedMinutes(value: any) {
-        if (value !== this._selectedMinutes) {
+        if (!Array.isArray(value)) {
+            value = [+value];
+        } else {
+            value = value.map(v => +v)
+        }
+
+        if (!this.arrayEquals(value, this._selectedMinutes)) {
             this.frequency.minuteValues = [];
-            this._selectedMinutes = +value;
-            this.frequency.minuteValues.push(+value);
+            this._selectedMinutes = value;
+            this.frequency.minuteValues = this.frequency.minuteValues.concat(value);
             this._onChangeCallback(this.setCronJobSyntax());
         }
         this._onTouchedCallback();
@@ -217,10 +230,16 @@ export class CronSelectionComponent implements OnInit, ControlValueAccessor, Cro
     }
 
     set selectedMonth(value: any) {
-        if (value !== this._selectedMonth) {
+        if (!Array.isArray(value)) {
+            value = [+value];
+        } else {
+            value = value.map(v => +v)
+        }
+
+        if (!this.arrayEquals(value, this._selectedMonth)) {
             this.frequency.monthValues = [];
-            this.frequency.monthValues.push(+value);
-            this._selectedMonth = +value;
+            this._selectedMonth = value;
+            this.frequency.monthValues = this.frequency.monthValues.concat(value);
             this._onChangeCallback(this.setCronJobSyntax());
         }
         this._onTouchedCallback();
@@ -231,10 +250,16 @@ export class CronSelectionComponent implements OnInit, ControlValueAccessor, Cro
     }
 
     set selectedDayOfMonth(value: any) {
-        if (value !== this._selectedDayOfMonth) {
+        if (!Array.isArray(value)) {
+            value = [+value];
+        } else {
+            value = value.map(v => +v)
+        }
+
+        if (!this.arrayEquals(value, this._selectedDayOfMonth)) {
             this.frequency.dayOfMonthValues = [];
-            this.frequency.dayOfMonthValues.push(+value);
-            this._selectedDayOfMonth = +value;
+            this._selectedDayOfMonth = value;
+            this.frequency.dayOfMonthValues = this.frequency.dayOfMonthValues.concat(value);
             this._onChangeCallback(this.setCronJobSyntax());
         }
         this._onTouchedCallback();
@@ -246,10 +271,16 @@ export class CronSelectionComponent implements OnInit, ControlValueAccessor, Cro
 
 
     set selectedDay(value: any) {
-        if (value !== this._selectedDay) {
+        if (!Array.isArray(value)) {
+            value = [+value];
+        } else {
+            value = value.map(v => +v)
+        }
+
+        if (!this.arrayEquals(value, this._selectedDay)) {
             this.frequency.dayValues = [];
-            this.frequency.dayValues.push(value);
-            this._selectedDay = +value;
+            this._selectedDay = value;
+            this.frequency.dayValues = this.frequency.dayValues.concat(value);
             this._onChangeCallback(this.setCronJobSyntax());
         }
         this._onTouchedCallback();
@@ -288,27 +319,43 @@ export class CronSelectionComponent implements OnInit, ControlValueAccessor, Cro
 
     setInitialValuesForBase(freq: Frequency): void {
         if (freq.base) {
-            if (freq.base >= this.baseFrequency.hour && freq.minuteValues.length === 0) {
-                freq.minuteValues[0] = this.minuteValues[0];
+            if (freq.base >= this.baseFrequency.hour && freq.minuteValues.length >= 0) {
+                freq.minuteValues = this._selectedMinutes;
             }
 
-            if (freq.base >= this.baseFrequency.day && freq.hourValues.length === 0) {
-                freq.hourValues[0] = this.hourValues[0];
+            if (freq.base >= this.baseFrequency.day && freq.hourValues.length >= 0) {
+                freq.hourValues = this._selectedHour;
             }
 
-            if (freq.base === this.baseFrequency.week && freq.dayValues.length === 0) {
-                freq.dayValues[0] = this.dayValues[0];
+            if (freq.base === this.baseFrequency.week && freq.dayValues.length >= 0) {
+                freq.dayValues = this._selectedDay;
             }
 
-            if (freq.base >= this.baseFrequency.month && freq.dayOfMonthValues.length === 0) {
-                freq.dayOfMonthValues[0] = this.dayOfMonthValues[0];
+            if (freq.base >= this.baseFrequency.month && freq.dayOfMonthValues.length >= 0) {
+                freq.dayOfMonthValues = this._selectedDayOfMonth;
             }
 
-            if (freq.base === this.baseFrequency.year && freq.monthValues.length === 0) {
-                freq.monthValues[0] = this.monthValues[0];
+            if (freq.base === this.baseFrequency.year && freq.monthValues.length >= 0) {
+                freq.monthValues = this._selectedMonth;
             }
         }
 
 
+    }
+
+    private arrayEquals(firstArray, secondArray) {
+        if (firstArray === secondArray) { return true; }
+        if (!firstArray || !secondArray) { return false; }
+        if (firstArray.length != secondArray.length) { return false; }
+        let equals = true;
+        firstArray = firstArray.sort();
+        secondArray = secondArray.sort();
+        firstArray.forEach(function (element, index) {
+            if (element != secondArray[index]) {
+                equals = false;
+                return;
+            }
+        });
+        return equals;
     }
 }
