@@ -23,6 +23,9 @@ import { QuartzService } from '../services/quartz.service';
   templateUrl: './cron-jobs.component.html',
   styleUrls: ['./cron-jobs.component.css'],
   providers: [
+    PosixService,
+    QuartzService,
+    DataService,
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => CronJobsComponent),
@@ -67,6 +70,7 @@ export class CronJobsComponent implements OnInit, OnChanges, OnDestroy, ControlV
 
     this.config = this.dataService.getConfig({});
     this.validate = this.dataService.getValidate({});
+    this.setService();
   }
 
   ngOnInit() {
@@ -110,11 +114,7 @@ export class CronJobsComponent implements OnInit, OnChanges, OnDestroy, ControlV
   ngOnChanges(changes: SimpleChanges) {
     if (changes['config'] && changes['config'].currentValue) {
       this.config = this.dataService.getConfig(<CronJobsConfig>changes['config'].currentValue);
-      if (this.config.quartz) {
-        this.cronService = this.injector.get(QuartzService);
-      } else {
-        this.cronService = this.injector.get(PosixService);
-      }
+      this.setService();
 
       setTimeout(() => {
         if (!changes['config'].previousValue ||
@@ -128,6 +128,14 @@ export class CronJobsComponent implements OnInit, OnChanges, OnDestroy, ControlV
       setTimeout(() => {
         this.validate = this.dataService.getValidate(<CronJobsValidationConfig>changes['validate'].currentValue);
       });
+    }
+  }
+
+  setService() {
+    if (this.config.quartz) {
+      this.cronService = this.injector.get(QuartzService);
+    } else {
+      this.cronService = this.injector.get(PosixService);
     }
   }
 
