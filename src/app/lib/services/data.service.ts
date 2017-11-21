@@ -141,21 +141,21 @@ export class DataService {
   }
 
 
-  getConfig(config: CronJobsConfig): CronJobsConfig {
+  getConfig(config: CronJobsConfig = {}): CronJobsConfig {
     return {
       ...this.defaultConfig,
       ...config
     };
   }
 
-  getValidate(validateConfig: CronJobsValidationConfig): CronJobsValidationConfig {
+  getValidate(validateConfig: CronJobsValidationConfig = {}): CronJobsValidationConfig {
     return {
       ...this.defaultValidateConfig,
       ...validateConfig
     };
   }
 
-  getDaysOfWeek(quartz: Boolean): Array<CronJobsSelectOption> {
+  getDaysOfWeek(quartz: Boolean = false): Array<CronJobsSelectOption> {
     if (quartz) {
       return [
         ...this.daysOfWeekQuartz
