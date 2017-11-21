@@ -14,6 +14,10 @@ export class QuartzService extends PosixService {
     const cron = value.replace(/\s+/g, ' ').split(' ');
     const frequency = this.getDefaultFrequency();
 
+    if (cron.length !== 6) {
+      return frequency;
+    }
+
     if (cron[1] === '*' && cron[2] === '*' && cron[3] === '*' && cron[4] === '*' && cron[5] === '?') {
       frequency.baseFrequency = this.baseFrequency.minute; // every minute
     } else if (cron[2] === '*' && cron[3] === '*' && cron[4] === '*' && cron[5] === '?') {
@@ -53,13 +57,9 @@ export class QuartzService extends PosixService {
   setCron(newValue: CronJobsFrequency) {
     const cron = ['0', '*', '*', '*', '*', '?'];
 
-    if (newValue && !newValue.baseFrequency) {
-      return '';
-    }
-
     if (newValue && newValue.baseFrequency) {
       if (newValue.baseFrequency >= this.baseFrequency.hour) {
-        cron[1] = newValue.minutes.length > 0 ? newValue.minutes.join(',') : '0';
+        cron[1] = newValue.minutes.length > 0 ? newValue.minutes.join(',') : '*';
       }
 
       if (newValue.baseFrequency >= this.baseFrequency.day) {
@@ -68,16 +68,22 @@ export class QuartzService extends PosixService {
 
       if (newValue.baseFrequency === this.baseFrequency.week) {
         cron[3] = '?';
-        cron[5] = newValue.daysOfWeek.join(',');
+        cron[5] = newValue.daysOfWeek.length > 0 ? newValue.daysOfWeek.join(',') : '*';
       }
 
       if (newValue.baseFrequency >= this.baseFrequency.month) {
-        cron[3] = newValue.daysOfMonth.length > 0 ? newValue.daysOfMonth.join(',') : '?';
+        cron[3] = newValue.daysOfMonth.length > 0 ? newValue.daysOfMonth.join(',') : '*';
       }
 
       if (newValue.baseFrequency === this.baseFrequency.year) {
         cron[4] = newValue.months.length > 0 ? newValue.months.join(',') : '*';
+        if (newValue.daysOfWeek.length > 0) {
+          cron[3] = '?';
+          cron[5] = newValue.daysOfWeek.join(',');
+        }
       }
+    } else {
+      return '';
     }
 
     return cron.join(' ');
