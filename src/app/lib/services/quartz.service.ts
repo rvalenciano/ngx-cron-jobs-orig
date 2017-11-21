@@ -11,7 +11,7 @@ export class QuartzService extends PosixService {
   }
 
   public fromCron(value: String): CronJobsFrequency {
-    const cron = value.replace(/\s+/g, ' ').split(' ');
+    const cron = value.trim().replace(/\s+/g, ' ').split(' ');
     const frequency = this.getDefaultFrequency();
 
     if (cron.length !== 6) {
