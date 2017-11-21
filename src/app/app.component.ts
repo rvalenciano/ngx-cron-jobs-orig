@@ -74,8 +74,6 @@ export class AppComponent implements OnInit {
       this.freqSingle = this.freqSingleCron;
     }
     this.setFormControl();
-    // setTimeout(() => {
-    // });
   }
 
   toggleService() {
