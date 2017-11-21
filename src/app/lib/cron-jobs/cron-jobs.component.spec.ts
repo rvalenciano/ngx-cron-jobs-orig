@@ -9,7 +9,7 @@ import { QuartzService } from '../services/quartz.service';
 import { DataService } from '../services/data.service';
 import { cold } from 'jasmine-marbles';
 
-fdescribe('CronJobsComponent', () => {
+xdescribe('CronJobsComponent', () => {
   let component: CronJobsComponent;
   let fixture: ComponentFixture<CronJobsComponent>;
 
