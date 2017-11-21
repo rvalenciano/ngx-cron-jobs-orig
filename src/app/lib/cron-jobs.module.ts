@@ -1,4 +1,4 @@
-import { NgModule, ModuleWithProviders } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CronJobsComponent } from './cron-jobs/cron-jobs.component';
@@ -17,6 +17,11 @@ import { QuartzService } from './services/quartz.service';
   ],
   exports: [
     CronJobsComponent
+  ],
+  providers: [
+    DataService,
+    PosixService,
+    QuartzService
   ]
 })
 export class CronJobsModule {
