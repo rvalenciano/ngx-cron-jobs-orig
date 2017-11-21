@@ -34,7 +34,7 @@ export class AppComponent implements OnInit {
   cronSingleConfig: CronJobsConfig = {
     ...this.cronConfig,
     multiple: false,
-  }
+  };
 
   cronValidate: CronJobsValidationConfig = {
     validate: true
@@ -86,7 +86,7 @@ export class AppComponent implements OnInit {
     this.cronSingleConfig = {
       ...this.cronSingleConfig,
       quartz: !this.cronSingleConfig.quartz
-    }
+    };
     this.set();
   }
   toggleBootstrap() {
@@ -104,7 +104,7 @@ export class AppComponent implements OnInit {
     setTimeout(() => {
       this.freqControl.setValue(this.freqSec);
       this.freqSingleControl.setValue(this.freqSingle);
-    })
+    });
   }
 
   toggleValidate() {
