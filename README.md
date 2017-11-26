@@ -1,9 +1,4 @@
-[![Build Status](https://travis-ci.org/rvalenciano/ngx-cron-jobs.svg?branch=master)](https://travis-ci.org/rvalenciano/ngx-cron-jobs)
-
-
-[![Maintainability](https://api.codeclimate.com/v1/badges/dc6b973320992074a560/maintainability)](https://codeclimate.com/github/rvalenciano/ngx-cron-jobs/maintainability)
-
-[![Test Coverage](https://api.codeclimate.com/v1/badges/dc6b973320992074a560/test_coverage)](https://codeclimate.com/github/rvalenciano/ngx-cron-jobs/test_coverage)
+[![Build Status](https://travis-ci.org/rvalenciano/ngx-cron-jobs.svg?branch=master)](https://travis-ci.org/rvalenciano/ngx-cron-jobs) [![Maintainability](https://api.codeclimate.com/v1/badges/dc6b973320992074a560/maintainability)](https://codeclimate.com/github/rvalenciano/ngx-cron-jobs/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/dc6b973320992074a560/test_coverage)](https://codeclimate.com/github/rvalenciano/ngx-cron-jobs/test_coverage)
 
 # ngx-cron-jobs
 
