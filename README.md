@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/rvalenciano/ngx-cron-jobs.svg?branch=master)](https://travis-ci.org/rvalenciano/ngx-cron-jobs)
+
 # ngx-cron-jobs
 
 Angular > 2 version of angular-cron-jobs (http://angular-cron-jobs.github.io/angular-cron-jobs)
