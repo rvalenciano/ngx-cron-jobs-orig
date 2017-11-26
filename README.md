@@ -3,6 +3,8 @@
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/dc6b973320992074a560/maintainability)](https://codeclimate.com/github/rvalenciano/ngx-cron-jobs/maintainability)
 
+[![Test Coverage](https://api.codeclimate.com/v1/badges/dc6b973320992074a560/test_coverage)](https://codeclimate.com/github/rvalenciano/ngx-cron-jobs/test_coverage)
+
 # ngx-cron-jobs
 
 Angular > 2 version of angular-cron-jobs (http://angular-cron-jobs.github.io/angular-cron-jobs)
