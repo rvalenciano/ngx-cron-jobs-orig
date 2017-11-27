@@ -112,10 +112,8 @@ export class CronJobsComponent implements OnInit, OnChanges, OnDestroy, ControlV
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['config'] && changes['config'].currentValue) {
+    if (changes['config']) {
       this.config = this.dataService.getConfig(<CronJobsConfig>changes['config'].currentValue);
-      this.setService();
-
       setTimeout(() => {
         if (!changes['config'].previousValue ||
           changes['config'].previousValue['quartz'] !== changes['config'].currentValue['quartz']) {
@@ -123,11 +121,11 @@ export class CronJobsComponent implements OnInit, OnChanges, OnDestroy, ControlV
           this.cronJobsForm.patchValue({daysOfWeek: this.daysOfWeekData[0].value});
         }
       });
+      this.setService();
     }
-    if (changes['validate'] && changes['validate'].currentValue) {
-      setTimeout(() => {
-        this.validate = this.dataService.getValidate(<CronJobsValidationConfig>changes['validate'].currentValue);
-      });
+
+    if (changes['validate']) {
+      this.validate = this.dataService.getValidate(<CronJobsValidationConfig>changes['validate'].currentValue);
     }
   }
 
@@ -182,11 +180,11 @@ export class CronJobsComponent implements OnInit, OnChanges, OnDestroy, ControlV
   }
 
   getIsValid(): boolean {
-    return this.validate.validate ? this.getValid() : false;
+    return (this.validate && this.validate.validate) ? this.getValid() : false;
   }
 
   getIsInvalid(): boolean {
-    return this.validate.validate ? !this.getValid() : false;
+    return (this.validate && this.validate.validate) ? !this.getValid() : false;
   }
 
   getValid(): boolean {
