@@ -36,11 +36,11 @@ import { QuartzService } from '../services/quartz.service';
 export class CronJobsComponent implements OnInit, OnChanges, OnDestroy, ControlValueAccessor {
   @Input() config: CronJobsConfig;
   @Input() validate: CronJobsValidationConfig;
-  @Input() isValid: boolean;
+  @Input() isValid = true;
   @Input() formControl: FormControl;
 
   public isDisabled = false;
-  public baseFrequencyData: Array<CronJobsSelectOption>;
+  public baseFrequencyData: Array<CronJobsSelectOption> = [];
   public baseFrequency$: Observable<number>;
   public daysOfWeekData: Array<CronJobsSelectOption> = [];
   public daysOfMonthData: Array<CronJobsSelectOption> = [];
@@ -180,11 +180,11 @@ export class CronJobsComponent implements OnInit, OnChanges, OnDestroy, ControlV
   }
 
   getIsValid(): boolean {
-    return (this.validate && this.validate.validate) ? this.getValid() : false;
+    return this.validate.validate ? this.getValid() : false;
   }
 
   getIsInvalid(): boolean {
-    return (this.validate && this.validate.validate) ? !this.getValid() : false;
+    return this.validate.validate ? !this.getValid() : false;
   }
 
   getValid(): boolean {
