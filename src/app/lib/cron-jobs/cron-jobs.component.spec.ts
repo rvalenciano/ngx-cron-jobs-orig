@@ -408,7 +408,7 @@ describe('CronJobsComponent', () => {
     expect(result).toBeFalsy();
   }));
 
-  it('should return if validation state equals to false on getIsValid call ' +
+  it('should return false if validation state equals to false on getIsValid call ' +
     'and no call getValid if validate.validate is false', fakeAsync(() => {
     testComponent.cronValidate = {
       validate: false
@@ -424,8 +424,8 @@ describe('CronJobsComponent', () => {
     expect(result).toBeFalsy();
   }));
 
-  it('should return if validation state equals to false on getIsInvalid call ' +
-    'and no call getValid if validate.validate is false', fakeAsync(() => {
+  it('should return false if validation state equals to false on getIsInvalid call ' +
+    'and no call getIsInvalid if validate.validate is false', fakeAsync(() => {
     testComponent.cronValidate = {
       validate: false
     };
