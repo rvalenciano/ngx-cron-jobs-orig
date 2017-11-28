@@ -32,7 +32,7 @@ export class PosixService {
   public fromCron(value: String): CronJobsFrequency {
     const cron = value.trim().replace(/\s+/g, ' ').split(' ');
     const frequency = this.getDefaultFrequency();
-    console.log('length', cron.length, cron);
+
     if (cron.length !== 5) {
       return frequency;
     }
