@@ -180,11 +180,11 @@ export class CronJobsComponent implements OnInit, OnChanges, OnDestroy, ControlV
   }
 
   getIsValid(): boolean {
-    return this.validate.validate ? this.getValid() : false;
+    return (this.validate && this.validate.validate) ? this.getValid() : false;
   }
 
   getIsInvalid(): boolean {
-    return this.validate.validate ? !this.getValid() : false;
+    return (this.validate && this.validate.validate) ? !this.getValid() : false;
   }
 
   getValid(): boolean {
