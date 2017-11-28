@@ -24,9 +24,9 @@
     "name": "Daniel 'yp2' Dereziński",
     "email": "daniel.derezinski@gmail.com"
   },
-  "author": {
-    "name": "Daniel 'yp2' Dereziński",
-    "email": "daniel.derezinski@gmail.com"
+  "contributors": {
+    "name": "Randall Valenciano Fallas",
+    "email": "ravf.226@gmail.com"
   },
   "keywords": [
     "angular",

@@ -40,7 +40,7 @@ export class CronJobsComponent implements OnInit, OnChanges, OnDestroy, ControlV
   @Input() formControl: FormControl;
 
   public isDisabled = false;
-  public baseFrequencyData: Array<CronJobsSelectOption> = [];
+  public baseFrequencyData: Array<CronJobsSelectOption>;
   public baseFrequency$: Observable<number>;
   public daysOfWeekData: Array<CronJobsSelectOption> = [];
   public daysOfMonthData: Array<CronJobsSelectOption> = [];
