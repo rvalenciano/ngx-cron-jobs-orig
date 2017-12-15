@@ -1,6 +1,6 @@
 <div class="form-inline" *ngIf="config?.bootstrap" [formGroup]="cronJobsForm">
   <label class="mr-sm-2" for="selectBase">Every: </label>
-  <select class="form-control" id="selectBase"
+  <select class="form-control" id="selectBase" (blur)="selectBaseBlur()"
           [ngClass]="{'is-valid': getIsValid(), 'is-invalid': getIsInvalid()}"
           formControlName="baseFrequency">
     <option *ngFor="let item of baseFrequencyData" [value]="item.value">{{item.label}}</option>
