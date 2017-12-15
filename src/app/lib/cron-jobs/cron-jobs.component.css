@@ -1,3 +1,7 @@
+:host {
+  display: block;
+}
+
 .cron-select-wrap {
   display: inline-block;
 }

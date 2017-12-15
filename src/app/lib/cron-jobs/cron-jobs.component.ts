@@ -1,5 +1,5 @@
 import {
-  Component, forwardRef, Injector, Input, OnChanges, OnDestroy, OnInit,
+  Component, forwardRef, HostListener, Injector, Input, OnChanges, OnDestroy, OnInit,
   SimpleChanges
 } from '@angular/core';
 import {
@@ -48,6 +48,7 @@ export class CronJobsComponent implements OnInit, OnChanges, OnDestroy, ControlV
   public hoursData: Array<CronJobsSelectOption> = [];
   public minutesData: Array<CronJobsSelectOption> = [];
   public onChange: (cronValue: string) => {};
+  public onTouched: () => {};
 
   private isPatching = false;
   private unSubscribe = new Subject();
@@ -81,6 +82,24 @@ export class CronJobsComponent implements OnInit, OnChanges, OnDestroy, ControlV
       .publishReplay(1)
       .refCount();
 
+    // this.cronJobsForm.get('baseFrequency')
+    //   .statusChanges
+    //   .subscribe((stat) => {
+    //     // console.log('s', stat);
+    //   });
+    //
+    // this.cronJobsForm
+    //   .valueChanges
+    //   .subscribe((val) => {
+    //     console.log('form value', val);
+    //   });
+    //
+    // this.cronJobsForm
+    //   .statusChanges
+    //   .subscribe((val) => {
+    //     console.log('form status', val);
+    //   });
+
     this.cronJobsForm
       .valueChanges
       .takeUntil(this.unSubscribe)
@@ -109,6 +128,11 @@ export class CronJobsComponent implements OnInit, OnChanges, OnDestroy, ControlV
       this.cronJobsForm.patchValue(this.getDefaultFrequency());
       this.isPatching = false;
     });
+  }
+
+  selectBaseBlur() {
+    this.onTouched();
+    console.log('aaa');
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -157,6 +181,7 @@ export class CronJobsComponent implements OnInit, OnChanges, OnDestroy, ControlV
   }
 
   registerOnTouched(fn: any): void {
+    this.onTouched = fn;
   }
 
   setDisabledState?(isDisabled: boolean): void {
