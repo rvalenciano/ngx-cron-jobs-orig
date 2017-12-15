@@ -82,24 +82,6 @@ export class CronJobsComponent implements OnInit, OnChanges, OnDestroy, ControlV
       .publishReplay(1)
       .refCount();
 
-    // this.cronJobsForm.get('baseFrequency')
-    //   .statusChanges
-    //   .subscribe((stat) => {
-    //     // console.log('s', stat);
-    //   });
-    //
-    // this.cronJobsForm
-    //   .valueChanges
-    //   .subscribe((val) => {
-    //     console.log('form value', val);
-    //   });
-    //
-    // this.cronJobsForm
-    //   .statusChanges
-    //   .subscribe((val) => {
-    //     console.log('form status', val);
-    //   });
-
     this.cronJobsForm
       .valueChanges
       .takeUntil(this.unSubscribe)
@@ -130,9 +112,8 @@ export class CronJobsComponent implements OnInit, OnChanges, OnDestroy, ControlV
     });
   }
 
-  selectBaseBlur() {
+  onBlur() {
     this.onTouched();
-    console.log('aaa');
   }
 
   ngOnChanges(changes: SimpleChanges) {
