@@ -206,7 +206,7 @@ describe('CronJobsComponent', () => {
     tick();
     testFixture.detectChanges();
 
-    expect(testComponent.freqSec).toEqual('0 * * * * ?');
+    expect(testComponent.freqSec).toEqual('0 * * * * ? *');
   }));
 
   it('should set baseFrequency$ on init with value 0 ', fakeAsync(() => {
@@ -455,17 +455,44 @@ describe('CronJobsComponent', () => {
     expect(secComponent.getValid()).toBeTruthy();
   }));
 
+  it('should on registerOnTouched set onTouched', () => {
+    const spy = createSpy('spy');
+
+    component.registerOnTouched(spy);
+
+    expect(component.onTouched).toBeDefined();
+  });
+
+  it('should on registerOnChange set onChange', () => {
+    const spy = createSpy('spy');
+
+    component.registerOnChange(spy);
+
+    expect(component.onChange).toBeDefined();
+  });
+
+  it('should on onBlur() call onTouched', () => {
+    const spy = createSpy('spy');
+    component.registerOnTouched(spy);
+
+    component.onBlur();
+
+    expect(spy).toHaveBeenCalled();
+  });
+
   describe('integration', () => {
     let fixture: ComponentFixture<CronJobsComponent>;
     let orgComponent: CronJobsComponent;
     let de: DebugElement;
     const spyOnChange = createSpy('spyOnChange');
+    const spyOnTouched = createSpy('spyOnTouched');
 
     beforeEach(() => {
       fixture = TestBed.createComponent(CronJobsComponent);
       orgComponent = fixture.componentInstance;
       spyOnChange.calls.reset();
       orgComponent.registerOnChange(spyOnChange);
+      orgComponent.registerOnTouched(spyOnTouched);
       de = fixture.debugElement;
       fixture.detectChanges();
     });

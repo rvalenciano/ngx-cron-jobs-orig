@@ -1,5 +1,5 @@
 import {
-  Component, forwardRef, HostListener, Injector, Input, OnChanges, OnDestroy, OnInit,
+  Component, forwardRef, Injector, Input, OnChanges, OnDestroy, OnInit,
   SimpleChanges
 } from '@angular/core';
 import {
@@ -49,12 +49,11 @@ export class CronJobsComponent implements OnInit, OnChanges, OnDestroy, ControlV
   public minutesData: Array<CronJobsSelectOption> = [];
   public onChange: (cronValue: string) => {};
   public onTouched: () => {};
+  public cronJobsForm: FormGroup;
 
   private isPatching = false;
   private unSubscribe = new Subject();
   private cronService: PosixService;
-
-  public cronJobsForm: FormGroup;
 
   constructor(private dataService: DataService,
               private injector: Injector,
