@@ -48,12 +48,12 @@ export class CronJobsComponent implements OnInit, OnChanges, OnDestroy, ControlV
   public hoursData: Array<CronJobsSelectOption> = [];
   public minutesData: Array<CronJobsSelectOption> = [];
   public onChange: (cronValue: string) => {};
+  public onTouched: () => {};
+  public cronJobsForm: FormGroup;
 
   private isPatching = false;
   private unSubscribe = new Subject();
   private cronService: PosixService;
-
-  public cronJobsForm: FormGroup;
 
   constructor(private dataService: DataService,
               private injector: Injector,
@@ -111,6 +111,10 @@ export class CronJobsComponent implements OnInit, OnChanges, OnDestroy, ControlV
     });
   }
 
+  onBlur() {
+    this.onTouched();
+  }
+
   ngOnChanges(changes: SimpleChanges) {
     if (changes['config']) {
       this.config = this.dataService.getConfig(<CronJobsConfig>changes['config'].currentValue);
@@ -157,6 +161,7 @@ export class CronJobsComponent implements OnInit, OnChanges, OnDestroy, ControlV
   }
 
   registerOnTouched(fn: any): void {
+    this.onTouched = fn;
   }
 
   setDisabledState?(isDisabled: boolean): void {
