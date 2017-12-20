@@ -14,7 +14,7 @@ export class QuartzService extends PosixService {
     return this.dataService.getDaysOfWeek(true);
   }
 
-  public fromCronWithDefault(value: String, freq: CronJobsFrequency): CronJobsFrequency {
+  public fromCronWithDefault(value: String): CronJobsFrequency {
     const cron = value.trim().replace(/\s+/g, ' ').split(' ');
     const frequency = this.getDefaultFrequenceWithDefault();
 

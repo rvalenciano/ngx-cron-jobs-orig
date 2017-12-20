@@ -44,7 +44,7 @@ export class PosixService {
     return this.dataService.getDaysOfWeek(false);
   }
 
-  public fromCronWithDefault(value: String, freq: CronJobsFrequency): CronJobsFrequency {
+  public fromCronWithDefault(value: String): CronJobsFrequency {
     const cron = value.trim().replace(/\s+/g, ' ').split(' ');
     const frequency = this.getDefaultFrequenceWithDefault();
 

@@ -145,7 +145,7 @@ export class CronJobsComponent implements OnInit, OnChanges, OnDestroy, ControlV
     this.isPatching = true;
     let valueToPatch: CronJobsFrequency;
     if (cronValue) {
-      valueToPatch = this.cronService.fromCron(cronValue);
+      valueToPatch = this.cronService.fromCronWithDefault(cronValue);
     } else {
       valueToPatch = this.cronService.getDefaultFrequenceWithDefault();
     }
