@@ -14,7 +14,7 @@ import createSpy = jasmine.createSpy;
 
 @Component({
   template:
-      `
+  `
     <cron-jobs [formControl]="freqControl" [config]="cronConfig" [validate]="cronValidate"></cron-jobs>
     <cron-jobs [config]="cronConfig" [validate]="cronValidate"></cron-jobs>
   `
@@ -53,7 +53,7 @@ class TestReactiveComponent {
   }
 }
 
-function getFormControlNames (list: Array<DebugElement>): Array<string> {
+function getFormControlNames(list: Array<DebugElement>): Array<string> {
   return list.map((ele: DebugElement) => {
     return ele.attributes['formControlName'];
   });
@@ -63,6 +63,7 @@ describe('CronJobsComponent', () => {
   let testComponent: TestReactiveComponent;
   let testFixture: ComponentFixture<TestReactiveComponent>;
   let component: CronJobsComponent;
+  let posixService: PosixService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -75,6 +76,7 @@ describe('CronJobsComponent', () => {
 
   beforeEach(() => {
     testFixture = TestBed.createComponent(TestReactiveComponent);
+    posixService = TestBed.get(PosixService);
     testComponent = testFixture.componentInstance;
     component = testFixture.debugElement.query(By.css('cron-jobs')).componentInstance;
   });
@@ -210,7 +212,7 @@ describe('CronJobsComponent', () => {
   }));
 
   it('should set baseFrequency$ on init with value 0 ', fakeAsync(() => {
-    const expected = cold('a', {a: 0});
+    const expected = cold('a', { a: 0 });
 
     testFixture.detectChanges();
     tick();
@@ -220,7 +222,7 @@ describe('CronJobsComponent', () => {
 
   it('should change baseFrequency$ on baseFrequency form control change', fakeAsync(() => {
     testFixture.detectChanges();
-    const expected = cold('a', {a: 2});
+    const expected = cold('a', { a: 2 });
 
     tick();
     component.cronJobsForm.get('baseFrequency').setValue('2');
@@ -245,25 +247,26 @@ describe('CronJobsComponent', () => {
 
   it('should call onChange and call getDefaultFrequency and set cronJobsForm value to default one ' +
     'if cronJobsForm was changed and baseFrequency is set to 0', fakeAsync(() => {
-    testFixture.detectChanges();
-    const spy = spyOn(component, 'onChange').and.callThrough();
-    const spyDefaultFreq = spyOn(component, 'getDefaultFrequency').and.callThrough();
-    const expected = {
-      baseFrequency: 0, daysOfWeek: [0], daysOfMonth: [1], months: [1], hours: [0], minutes: [0]
-    };
+      testFixture.detectChanges();
+      const spy = spyOn(component, 'onChange').and.callThrough();
+      const spyDefaultFreq = spyOn(posixService, 'getDefaultFrequenceWithDefault').and.callThrough();
+      const expected = {
+        baseFrequency: 0, daysOfWeek: [0], daysOfMonth: [1], months: [1], hours: [0], minutes: [0]
+      };
 
-    tick();
-    component.cronJobsForm.get('baseFrequency').setValue('2');
-    component.cronJobsForm.get('minutes').setValue(['5']);
-    spy.calls.reset();
-    spyDefaultFreq.calls.reset();
-    component.cronJobsForm.get('baseFrequency').setValue('0');
-    // testFixture.detectChanges();
+      tick();
+      component.cronJobsForm.get('baseFrequency').setValue('2');
+      component.cronJobsForm.get('minutes').setValue(['5']);
 
-    expect(spy).toHaveBeenCalledTimes(1);
-    expect(spyDefaultFreq).toHaveBeenCalledTimes(1);
-    expect(component.cronJobsForm.value).toEqual(expected);
-  }));
+      spy.calls.reset();
+      spyDefaultFreq.calls.reset();
+      component.cronJobsForm.get('baseFrequency').setValue('0');
+      testFixture.detectChanges();
+      tick();
+      expect(spy).toHaveBeenCalledTimes(1);
+      // expect(spyDefaultFreq).toHaveBeenCalledTimes(1);
+      expect(component.cronJobsForm.value).toEqual(expected);
+    }));
 
   it('should not call onChange if component values are patched', fakeAsync(() => {
     testFixture.detectChanges();
@@ -294,7 +297,7 @@ describe('CronJobsComponent', () => {
   it('should on init patch cronJobsFrom with default value', fakeAsync(() => {
     testFixture.detectChanges();
     const spy = spyOn(component.cronJobsForm, 'patchValue').and.callThrough();
-    const expected = component.getDefaultFrequency();
+    const expected = posixService.getDefaultFrequenceWithDefault();
 
     tick();
     expect(spy).toHaveBeenCalledWith(expected);
@@ -303,7 +306,7 @@ describe('CronJobsComponent', () => {
   it('should call cronService.fromCron and patchValue on writeValue call with correct data', fakeAsync(() => {
     testFixture.detectChanges();
     const spy = spyOn(component.cronJobsForm, 'patchValue').and.callThrough();
-    const expected = component.getDefaultFrequency();
+    const expected = posixService.getDefaultFrequenceWithDefault();
 
     tick();
     spy.calls.reset();
@@ -317,7 +320,7 @@ describe('CronJobsComponent', () => {
   it('should not call cronService.fromCron and call patchValue with default data on writeValue call with empty data', fakeAsync(() => {
     testFixture.detectChanges();
     const spy = spyOn(component.cronJobsForm, 'patchValue').and.callThrough();
-    const expected = component.getDefaultFrequency();
+    const expected = posixService.getDefaultFrequenceWithDefault();
 
     tick();
     component.writeValue('* * * * *');
@@ -362,24 +365,7 @@ describe('CronJobsComponent', () => {
       baseFrequency: 0, daysOfWeek: [0], daysOfMonth: [1], months: [1], hours: [0], minutes: [0]
     };
 
-    const result = component.getDefaultFrequency();
-
-    expect(result).toEqual(expected);
-  }));
-
-  it('should return default frequency object on getDefaultFrequency call when no select data specified', fakeAsync(() => {
-    testFixture.detectChanges();
-    tick();
-    component.daysOfWeekData = [];
-    component.daysOfMonthData = [];
-    component.monthsData = [];
-    component.hoursData = [];
-    component.minutesData = [];
-
-    const expected = {
-      baseFrequency: 0, daysOfWeek: [], daysOfMonth: [], months: [], hours: [], minutes: []
-    };
-    const result = component.getDefaultFrequency();
+    const result = posixService.getDefaultFrequenceWithDefault();
 
     expect(result).toEqual(expected);
   }));
@@ -410,35 +396,35 @@ describe('CronJobsComponent', () => {
 
   it('should return false if validation state equals to false on getIsValid call ' +
     'and no call getValid if validate.validate is false', fakeAsync(() => {
-    testComponent.cronValidate = {
-      validate: false
-    };
-    testFixture.detectChanges();
-    const spy = spyOn(component, 'getValid').and.callThrough();
+      testComponent.cronValidate = {
+        validate: false
+      };
+      testFixture.detectChanges();
+      const spy = spyOn(component, 'getValid').and.callThrough();
 
-    tick();
-    spy.calls.reset();
-    const result = component.getIsValid();
+      tick();
+      spy.calls.reset();
+      const result = component.getIsValid();
 
-    expect(spy).not.toHaveBeenCalled();
-    expect(result).toBeFalsy();
-  }));
+      expect(spy).not.toHaveBeenCalled();
+      expect(result).toBeFalsy();
+    }));
 
   it('should return false if validation state equals to false on getIsInvalid call ' +
     'and no call getIsInvalid if validate.validate is false', fakeAsync(() => {
-    testComponent.cronValidate = {
-      validate: false
-    };
-    testFixture.detectChanges();
-    const spy = spyOn(component, 'getValid').and.callThrough();
+      testComponent.cronValidate = {
+        validate: false
+      };
+      testFixture.detectChanges();
+      const spy = spyOn(component, 'getValid').and.callThrough();
 
-    tick();
-    spy.calls.reset();
-    const result = component.getIsInvalid();
+      tick();
+      spy.calls.reset();
+      const result = component.getIsInvalid();
 
-    expect(spy).not.toHaveBeenCalled();
-    expect(result).toBeFalsy();
-  }));
+      expect(spy).not.toHaveBeenCalled();
+      expect(result).toBeFalsy();
+    }));
 
   it('should return formControl.valid if formControl is defined', fakeAsync(() => {
     testFixture.detectChanges();
