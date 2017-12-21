@@ -208,7 +208,7 @@ describe('CronJobsComponent', () => {
     tick();
     testFixture.detectChanges();
 
-    expect(testComponent.freqSec).toEqual('0 * * * * ? *');
+    expect(testComponent.freqSec).toEqual('0 * * * * ?');
   }));
 
   it('should set baseFrequency$ on init with value 0 ', fakeAsync(() => {

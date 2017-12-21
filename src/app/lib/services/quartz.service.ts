@@ -69,7 +69,7 @@ export class QuartzService extends PosixService {
   }
 
   setCron(newValue: CronJobsFrequency) {
-    const cron = ['0', '*', '*', '*', '*', '?', '*'];
+    const cron = ['0', '*', '*', '*', '*', '?'];
 
     if (newValue && newValue.baseFrequency) {
       if (newValue.baseFrequency >= this.baseFrequency.hour) {
