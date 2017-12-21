@@ -27,7 +27,7 @@ export class AppComponent implements OnInit {
 
   cronConfig: CronJobsConfig = {
     multiple: true,
-    quartz: false,
+    quartz: true,
     bootstrap: true
   };
 

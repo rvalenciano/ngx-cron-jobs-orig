@@ -14,15 +14,6 @@ export interface CronJobsConfig {
   bootstrap?: boolean;
 }
 
-export interface FrequencyOld {
-  base: number;
-  minuteValues: Array<number>;
-  hourValues: Array<number>;
-  dayOfMonthValues: Array<number>;
-  monthValues: Array<number>;
-  dayValues: Array<number>;
-}
-
 export interface CronJobsFrequency {
   baseFrequency: number;
   minutes: Array<number>;

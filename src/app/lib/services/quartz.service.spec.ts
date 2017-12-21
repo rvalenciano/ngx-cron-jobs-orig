@@ -448,5 +448,19 @@ describe('QuartzService', () => {
 
       expect(service.setCron(frequency)).toEqual(expected);
     });
+
+    it('should support seven characters long cron expressions "0 10 1 ? * 2"', () => {
+      const expected = {
+        baseFrequency: fixture.baseFrequencyForService.week,
+        minutes: [10],
+        hours: [1],
+        daysOfMonth: [],
+        daysOfWeek: [2],
+        months: []
+      };
+      const cronExpression = '0 10 1 ? * 2';
+
+      expect(service.fromCron(cronExpression)).toEqual(expected);
+    });
   });
 });

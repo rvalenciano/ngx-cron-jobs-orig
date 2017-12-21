@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { PosixService } from './posix.service';
 import { DataService } from './data.service';
-import { CronJobsFrequency } from '../contracts/contracts';
+import { CronJobsFrequency, CronJobsSelectOption } from '../contracts/contracts';
 
 @Injectable()
 export class QuartzService extends PosixService {
@@ -10,11 +10,25 @@ export class QuartzService extends PosixService {
     super(dataService);
   }
 
+  protected getDaysOfWeek(): Array<CronJobsSelectOption> {
+    return this.dataService.getDaysOfWeek(true);
+  }
+
+  public fromCronWithDefault(value: String): CronJobsFrequency {
+    const cron = value.trim().replace(/\s+/g, ' ').split(' ');
+    const frequency = this.getDefaultFrequenceWithDefault();
+
+    return this.fromCronQuartzInternal(cron, frequency);
+  }
+
   public fromCron(value: String): CronJobsFrequency {
     const cron = value.trim().replace(/\s+/g, ' ').split(' ');
     const frequency = this.getDefaultFrequency();
+    return this.fromCronQuartzInternal(cron, frequency);
+  }
 
-    if (cron.length !== 6) {
+  private fromCronQuartzInternal(cron: string[], frequency: CronJobsFrequency) {
+    if (!(cron.length === 6 || cron.length === 7)) {
       return frequency;
     }
 

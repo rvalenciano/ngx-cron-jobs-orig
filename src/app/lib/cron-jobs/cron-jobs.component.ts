@@ -48,12 +48,12 @@ export class CronJobsComponent implements OnInit, OnChanges, OnDestroy, ControlV
   public hoursData: Array<CronJobsSelectOption> = [];
   public minutesData: Array<CronJobsSelectOption> = [];
   public onChange: (cronValue: string) => {};
+  public onTouched: () => {};
+  public cronJobsForm: FormGroup;
 
   private isPatching = false;
   private unSubscribe = new Subject();
   private cronService: PosixService;
-
-  public cronJobsForm: FormGroup;
 
   constructor(private dataService: DataService,
               private injector: Injector,
@@ -91,7 +91,7 @@ export class CronJobsComponent implements OnInit, OnChanges, OnDestroy, ControlV
       })
       .subscribe((values: CronJobsFrequency) => {
         if (!values.baseFrequency) {
-          values = this.getDefaultFrequency();
+          values = this.cronService.getDefaultFrequenceWithDefault();
           this.cronJobsForm.patchValue(values, {emitEvent: false});
         }
         this.onChange(this.cronService.setCron(values));
@@ -106,9 +106,13 @@ export class CronJobsComponent implements OnInit, OnChanges, OnDestroy, ControlV
 
     this.isPatching = true;
     setTimeout(() => {
-      this.cronJobsForm.patchValue(this.getDefaultFrequency());
+      this.cronJobsForm.patchValue(this.cronService.getDefaultFrequenceWithDefault());
       this.isPatching = false;
     });
+  }
+
+  onBlur() {
+    this.onTouched();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -141,9 +145,9 @@ export class CronJobsComponent implements OnInit, OnChanges, OnDestroy, ControlV
     this.isPatching = true;
     let valueToPatch: CronJobsFrequency;
     if (cronValue) {
-      valueToPatch = this.cronService.fromCron(cronValue);
+      valueToPatch = this.cronService.fromCronWithDefault(cronValue);
     } else {
-      valueToPatch = this.getDefaultFrequency();
+      valueToPatch = this.cronService.getDefaultFrequenceWithDefault();
     }
 
     setTimeout(() => {
@@ -157,6 +161,7 @@ export class CronJobsComponent implements OnInit, OnChanges, OnDestroy, ControlV
   }
 
   registerOnTouched(fn: any): void {
+    this.onTouched = fn;
   }
 
   setDisabledState?(isDisabled: boolean): void {
@@ -166,17 +171,6 @@ export class CronJobsComponent implements OnInit, OnChanges, OnDestroy, ControlV
     } else {
       this.cronJobsForm.enable();
     }
-  }
-
-  getDefaultFrequency(): CronJobsFrequency {
-    const freq = this.cronService.getDefaultFrequency();
-    freq.daysOfWeek = this.daysOfWeekData[0] ? [this.daysOfWeekData[0].value] : [];
-    freq.daysOfMonth = this.daysOfMonthData[0] ? [this.daysOfMonthData[0].value] : [];
-    freq.months = this.monthsData[0] ? [this.monthsData[0].value] : [];
-    freq.hours = this.hoursData[0] ? [this.hoursData[0].value] : [];
-    freq.minutes = this.minutesData[0] ? [this.minutesData[0].value] : [];
-
-    return freq;
   }
 
   getIsValid(): boolean {
