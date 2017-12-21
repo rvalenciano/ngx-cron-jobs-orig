@@ -205,16 +205,16 @@ describe('QuartzService', () => {
       expect(service.fromCron(cronExpression)).toEqual(expected);
     });
 
-    it ('should parse "0 1 1 ? 1 2" as At 01:01:00am, on every Monday, in January', () => {
+    it ('should parse "0 1 1 ? * 2" as At 01:01:00am, on every Monday, every month', () => {
       const expected = {
         baseFrequency: fixture.baseFrequencyForService.week,
         minutes: [1],
         hours: [1],
         daysOfMonth: [],
         daysOfWeek: [2],
-        months: [1]
+        months: []
       };
-      const cronExpression = '0 1 1 ? 1 2';
+      const cronExpression = '0 1 1 ? * 2';
 
       expect(service.fromCron(cronExpression)).toEqual(expected);
     });
@@ -432,35 +432,6 @@ describe('QuartzService', () => {
       const expected = '0 10 4 2 2 ?';
 
       expect(service.setCron(frequency)).toEqual(expected);
-    });
-
-    it('should return "0 10 4 ? * 2" when baseFrequency was set to year on baseFrequencyForService ' +
-      'and all data set beside daysOfWeek', () => {
-      const frequency = {
-        baseFrequency: fixture.baseFrequencyForService.year,
-        minutes: [10],
-        hours: [4],
-        daysOfMonth: [],
-        daysOfWeek: [2],
-        months: []
-      };
-      const expected = '0 10 4 ? * 2';
-
-      expect(service.setCron(frequency)).toEqual(expected);
-    });
-
-    it('should support seven characters long cron expressions "0 10 1 ? * 2"', () => {
-      const expected = {
-        baseFrequency: fixture.baseFrequencyForService.week,
-        minutes: [10],
-        hours: [1],
-        daysOfMonth: [],
-        daysOfWeek: [2],
-        months: []
-      };
-      const cronExpression = '0 10 1 ? * 2';
-
-      expect(service.fromCron(cronExpression)).toEqual(expected);
     });
   });
 });

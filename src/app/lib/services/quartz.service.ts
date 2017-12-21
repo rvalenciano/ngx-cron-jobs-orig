@@ -38,7 +38,7 @@ export class QuartzService extends PosixService {
       frequency.baseFrequency = this.baseFrequency.hour; // every hour
     } else if (cron[3] === '*' && cron[4] === '*' && cron[5] === '?') {
       frequency.baseFrequency = this.baseFrequency.day; // every day
-    } else if (cron[3] === '?') {
+    } else if (cron[3] === '?' && cron[4] === '*') {
       frequency.baseFrequency = this.baseFrequency.week; // every week
     } else if (cron[4] === '*' && cron[5] === '?') {
       frequency.baseFrequency = this.baseFrequency.month; // every month
@@ -91,10 +91,6 @@ export class QuartzService extends PosixService {
 
       if (newValue.baseFrequency === this.baseFrequency.year) {
         cron[4] = newValue.months.length > 0 ? newValue.months.join(',') : '*';
-        if (newValue.daysOfWeek.length > 0) {
-          cron[3] = '?';
-          cron[5] = newValue.daysOfWeek.join(',');
-        }
       }
     } else {
       return '';
