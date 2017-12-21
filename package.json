@@ -1,6 +1,6 @@
 {
   "name": "ngx-cron-jobs",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
@@ -15,10 +15,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/rvalenciano/ngx-cron-jobs"
+    "url": "https://github.com/yp2/ngx-cron-jobs"
   },
   "bugs": {
-    "url": "https://github.com/rvalenciano/ngx-cron-jobs/issues"
+    "url": "https://github.com/yp2/ngx-cron-jobs/issues"
   },
   "author": {
     "name": "Daniel 'yp2' Dereziński",
