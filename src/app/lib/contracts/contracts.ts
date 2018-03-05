@@ -12,6 +12,7 @@ export interface CronJobsConfig {
   quartz?: boolean;
   multiple?: boolean;
   bootstrap?: boolean;
+  option?: {};
 }
 
 export interface CronJobsFrequency {

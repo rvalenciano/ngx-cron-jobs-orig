@@ -54,6 +54,17 @@ The component takes an attribute of `config`
 
 ### Options
 
+This is an object in your controller you can use to remove options from the user. For example if you would like the user to be able to set Minute, Hour, and Day but not Week, Month, and Year you would create the following object in your controller:
+
+```json
+{
+    quartz: true,
+    multiple: false,
+    options : {
+      minute : false
+    }
+}
+```
 
 ## Development
 
