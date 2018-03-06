@@ -97,7 +97,14 @@ export class CronJobsComponent implements OnInit, OnChanges, OnDestroy, ControlV
         this.onChange(this.cronService.setCron(values));
       });
 
-    this.baseFrequencyData = this.dataService.baseFrequency;
+    let baseFreq = this.dataService.baseFrequency;
+
+    if (this.config.option) {
+      baseFreq = baseFreq.filter(x => !(this.config.option.hasOwnProperty(x.label.toString().toLowerCase()) && !this.config.option[x.label])
+      );
+    }
+
+    this.baseFrequencyData = baseFreq;
     this.daysOfMonthData = this.dataService.daysOfMonth;
     this.daysOfWeekData = this.dataService.getDaysOfWeek(false);
     this.monthsData = this.dataService.months;
